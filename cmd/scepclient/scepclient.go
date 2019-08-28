@@ -160,21 +160,27 @@ func run(cfg runCfg) error {
 		}
 	}
 
+	println("scepclient - run - defining signerCert")
 	var signerCert *x509.Certificate
 	{
 		if cert != nil {
+			println("scepclient - run - defining signerCert - cert is not nil - using cert")
 			signerCert = cert
 		} else {
+			println("scepclient - run - defining signerCert - cert is nil - using self")
 			signerCert = self
 		}
 	}
 
+	println("scepclient - run - defining msgType")
 	var msgType scep.MessageType
 	{
 		// TODO validate CA and set UpdateReq if needed
 		if cert != nil {
-			msgType = scep.RenewalReq
+			println("scepclient - run - defining msgType - cert is not nil - msgType = scep.RenewalReq")
+			msgType = scep.PKCSReq
 		} else {
+			println("scepclient - run - defining msgType - cert is nil - msgType = scep.PKCSReq")
 			msgType = scep.PKCSReq
 		}
 	}
