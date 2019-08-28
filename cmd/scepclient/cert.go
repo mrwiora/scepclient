@@ -92,6 +92,8 @@ func loadPEMCertFromFile(path string) (*x509.Certificate, error) {
 	if pemBlock == nil {
 		return nil, errors.New("PEM decode failed")
 	}
+	println("cert - loadPEMCertFromFile - pemBlock.Type: ")
+	println(pemBlock.Type)
 	if pemBlock.Type != certificatePEMBlockType {
 		return nil, errors.New("unmatched type or headers")
 	}

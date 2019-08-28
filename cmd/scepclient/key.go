@@ -62,6 +62,8 @@ func loadKeyFromFile(path string) (*rsa.PrivateKey, error) {
 	if pemBlock == nil {
 		return nil, errors.New("PEM decode failed")
 	}
+	println("key - loadPEMCertFromFile - pemBlock.Type: ")
+	println(pemBlock.Type)
 	if pemBlock.Type != rsaPrivateKeyPEMBlockType {
 		return nil, errors.New("unmatched type or headers")
 	}

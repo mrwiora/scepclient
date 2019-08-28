@@ -49,6 +49,7 @@ type runCfg struct {
 }
 
 func run(cfg runCfg) error {
+	println("scepclient - run - Entrypoint")
 	ctx := context.Background()
 	var logger log.Logger
 	{
@@ -65,16 +66,22 @@ func run(cfg runCfg) error {
 	}
 	lginfo := level.Info(logger)
 
+	println("scepclient - run - Starting scepclient with serverURL")
 	client, err := scepclient.New(cfg.serverURL, logger)
 	if err != nil {
 		return err
 	}
+	println("scepclient - run - Started scepclient with serverURL")
 
 	sigAlgo := x509.SHA1WithRSA
 	if client.Supports("SHA-256") || client.Supports("SCEPStandard") {
+		println("scepclient - run - Client supports SHA-256")
 		sigAlgo = x509.SHA256WithRSA
 	}
 
+	println("scepclient - run - key loadOrMakeKey")
+	println("scepclient - run - key loadOrMakeKey - cfg.keyPath: ")
+	println(cfg.keyPath)
 	key, err := loadOrMakeKey(cfg.keyPath, cfg.keyBits)
 	if err != nil {
 		return err
@@ -92,15 +99,23 @@ func run(cfg runCfg) error {
 		sigAlgo:   sigAlgo,
 	}
 
+	println("scepclient - run - csr loadOrMakeKey")
+	println("scepclient - run - csr loadOrMakeKey - cfg.csrPath: ")
+	println(cfg.csrPath)
 	csr, err := loadOrMakeCSR(cfg.csrPath, opts)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
+	println("scepclient - run - cert loadPEMCertFromFile")
+	println("scepclient - run - csr loadOrMakeKey - cfg.certPath: ")
+	println(cfg.certPath)
 	var self *x509.Certificate
 	cert, err := loadPEMCertFromFile(cfg.certPath)
 	if err != nil {
+		println("scepclient - run - ERROR cert loadPEMCertFromFile")
+		println(cfg.certPath)
 		if !os.IsNotExist(err) {
 			return err
 		}
@@ -110,6 +125,8 @@ func run(cfg runCfg) error {
 		}
 		self = s
 	}
+	println("scepclient - run - loaded loadPEMCertFromFile")
+	println(cert)
 
 	resp, certNum, err := client.GetCACert(ctx)
 	if err != nil {
