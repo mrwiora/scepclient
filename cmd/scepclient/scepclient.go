@@ -84,6 +84,7 @@ func run(cfg runCfg) error {
 	println(cfg.keyPath)
 	key, err := loadOrMakeKey(cfg.keyPath, cfg.keyBits)
 	if err != nil {
+		println("scepclient - run - ERROR key loadPEMCertFromFile")
 		return err
 	}
 
@@ -104,18 +105,19 @@ func run(cfg runCfg) error {
 	println(cfg.csrPath)
 	csr, err := loadOrMakeCSR(cfg.csrPath, opts)
 	if err != nil {
+		println("scepclient - run - ERROR csr loadPEMCertFromFile")
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
 	println("scepclient - run - cert loadPEMCertFromFile")
-	println("scepclient - run - csr loadOrMakeKey - cfg.certPath: ")
+	println("scepclient - run - cert loadOrMakeKey - cfg.certPath: ")
 	println(cfg.certPath)
 	var self *x509.Certificate
 	cert, err := loadPEMCertFromFile(cfg.certPath)
 	if err != nil {
 		println("scepclient - run - ERROR cert loadPEMCertFromFile")
-		println(cfg.certPath)
+		fmt.Println(err)
 		if !os.IsNotExist(err) {
 			return err
 		}

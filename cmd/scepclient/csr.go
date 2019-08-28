@@ -90,6 +90,8 @@ func loadCSRfromFile(path string) (*x509.CertificateRequest, error) {
 	if pemBlock == nil {
 		return nil, errors.New("cannot find the next PEM formatted block")
 	}
+	println("csr - loadPEMCertFromFile - pemBlock.Type: ")
+	println(pemBlock.Type)
 	if pemBlock.Type != csrPEMBlockType || len(pemBlock.Headers) != 0 {
 		return nil, errors.New("unmatched type or headers")
 	}
