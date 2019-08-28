@@ -130,21 +130,29 @@ func run(cfg runCfg) error {
 	println("scepclient - run - loaded loadPEMCertFromFile")
 	println(cert)
 
+	println("scepclient - run - client.GetCACert")
 	resp, certNum, err := client.GetCACert(ctx)
 	if err != nil {
+		println("scepclient - run - client.GetCACert - ERROR")
 		return err
 	}
 	var certs []*x509.Certificate
 	{
 		if certNum > 1 {
+			println("scepclient - run - client.GetCACert - more than one Certificate returned")
 			certs, err = scep.CACerts(resp)
+			println("scepclient - run - client.GetCACert - certs: ")
+			println(certs)
+			certs, err = x509.ParseCertificates(certs[1].Raw)
+			println(certs)
 			if err != nil {
 				return err
 			}
 			if len(certs) < 1 {
-				return fmt.Errorf("no certificates returned")
+				return fmt.Errorf("scepclient - run - client.GetCACert - no certificates returned")
 			}
 		} else {
+			println("scepclient - run - client.GetCACert - exactly one Certificate returned")
 			certs, err = x509.ParseCertificates(resp)
 			if err != nil {
 				return err

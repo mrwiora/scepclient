@@ -532,8 +532,12 @@ func DegenerateCertificates(certs []*x509.Certificate) ([]byte, error) {
 
 // CACerts extract CA Certificate or chain from pkcs7 degenerate signed data
 func CACerts(data []byte) ([]*x509.Certificate, error) {
+	println("scep - CACerts - ENTRYPOINT")
 	p7, err := pkcs7.Parse(data)
+	println("scep - CACerts - p7: ")
+	println(p7.Certificates[0])
 	if err != nil {
+		println("scep - CACerts - ERROR")
 		return nil, err
 	}
 	return p7.Certificates, nil
